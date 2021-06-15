@@ -7,8 +7,8 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @NoArgsConstructor
-@Entity
 @Getter @Setter
+@Entity
 @Table
 public class Product {
 
