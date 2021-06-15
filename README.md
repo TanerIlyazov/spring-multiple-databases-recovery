@@ -5,12 +5,12 @@ If you one of the container f.e. with `docker stop user-mysql-db`, the connectio
 
 Start mysql database with docker
 ```
-docker run --name user-mysql-db --platform linux/amd64 -p 3307:3306 -e MYSQL_DATABASE=UserDB -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_USER=user_admin -e MYSQL_PASSWORD=user_password -d percona:5.7
-docker run --name product-mysql-db --platform linux/amd64 -p 3308:3306 -e MYSQL_DATABASE=ProductDB -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_USER=product_admin -e MYSQL_PASSWORD=product_password -d percona:5.7
+docker run --name user-mysql-db -p 3307:3306 -e MYSQL_DATABASE=UserDB -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_USER=user_admin -e MYSQL_PASSWORD=user_password -d percona:5.7
+docker run --name product-mysql-db -p 3308:3306 -e MYSQL_DATABASE=ProductDB -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_USER=product_admin -e MYSQL_PASSWORD=product_password -d percona:5.7
 ```
 
 In case you're using an ARM based machine 
 ```
-docker run --name user-mysql-db -p 3307:3306 -e MYSQL_DATABASE=UserDB -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_USER=user_admin -e MYSQL_PASSWORD=user_password -d percona:5.7
-docker run --name user-mysql-db -p 3308:3306 -e MYSQL_DATABASE=ProductDB -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_USER=product_admin -e MYSQL_PASSWORD=product_password -d percona:5.7
+docker run --name user-mysql-db --platform linux/amd64 -p 3307:3306 -e MYSQL_DATABASE=UserDB -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_USER=user_admin -e MYSQL_PASSWORD=user_password -d percona:5.7
+docker run --name user-mysql-db --platform linux/amd64 -p 3308:3306 -e MYSQL_DATABASE=ProductDB -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_USER=product_admin -e MYSQL_PASSWORD=product_password -d percona:5.7
 ```
