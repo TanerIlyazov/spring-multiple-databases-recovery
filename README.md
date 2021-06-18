@@ -9,7 +9,7 @@ There are two branches in this project:
 
 Both branches use the same datasource and jpa configuration.
 
-Test recovery for a two separate datasources using Hikari Connection pool
+---
 
 Running the application with the started mysql containers will populate the User and Product tables with pseudo-random values and start querying every 30s.
 If you stop one of the containers, f.e. with `docker stop user-mysql-db`, the connection will be lost and you'd start getting *Connection Refused*, starting the container again with `docker start user-mysql-db` will not be able to trigger the recovery mechanism of JDBC4 and the connection will be lost until a restart.
