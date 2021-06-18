@@ -1,4 +1,15 @@
-Test recovery for a single datasource using Hikari Connection pool
+Mock project with branch reproducing an unexpected(hopefully only for me) behaviour by spring boot and Hikari connection pools.
+Seems like recovering the connection to an external datasource is not working as spring's documentation implies when
+- not using AutoDatasourceConfiguration
+- or having more than 1 datasource
+
+There are two branches in this project:
+- `master`: instructions and code to reproduce failing recovery
+- `single-datasource`: instructions and code with successfully recovering datasource connection
+
+Both branches use the same datasource and jpa configuration.
+
+---
 
 Running the application with the started mysql container will populate the User and Product tables with pseudo-random values and start querying them every 30s.
 If you stop the container with `docker stop single-mysql-db`, the connection will be lost and you'd start getting *Connection Refused*, starting the container again with `docker start single-mysql-db` should result in a revived connection and the select statements will return results as normal.
