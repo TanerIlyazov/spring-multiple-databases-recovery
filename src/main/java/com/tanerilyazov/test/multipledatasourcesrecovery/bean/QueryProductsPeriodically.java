@@ -24,6 +24,7 @@ public class QueryProductsPeriodically {
 
     @Scheduled(initialDelay = 5000, fixedDelay = 30000)
     public void queryUsers() {
+        log.info("Querying products");
         List<Product> products = productJdbcTemplate.query("select * from Product", new ProductRowMapper());
         log.info("Queried products, result: " + products);
     }

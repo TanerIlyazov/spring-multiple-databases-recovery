@@ -1,6 +1,5 @@
 package com.tanerilyazov.test.multipledatasourcesrecovery;
 
-import com.tanerilyazov.test.multipledatasourcesrecovery.bean.QueryProductsPeriodically;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.WebApplicationInitializer;
@@ -12,10 +11,10 @@ import java.util.logging.Logger;
 @Configuration
 public class SpringConfiguration implements WebApplicationInitializer {
 
-    private final Logger log = Logger.getLogger(QueryProductsPeriodically.class.getName());
+    private final Logger log = Logger.getLogger(SpringConfiguration.class.getName());
 
     @Override
     public void onStartup(javax.servlet.ServletContext servletContext) throws ServletException {
-        log.info("Started Spring app");
+        log.info("Initialized Spring app");
     }
 }

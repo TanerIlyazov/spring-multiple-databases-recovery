@@ -24,6 +24,7 @@ public class QueryUsersPeriodically {
 
     @Scheduled(initialDelay = 5000, fixedDelay = 30000)
     public void queryUsers() {
+        log.info("Querying users");
         List<User> users = userJdbcTemplate.query("select * from User", new UserRowMapper());
         log.info("Queried users, result: " + users);
     }

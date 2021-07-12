@@ -1,6 +1,7 @@
 package com.tanerilyazov.test.multipledatasourcesrecovery.configuration;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -30,13 +31,12 @@ public class UserDataSourceConfiguration {
     @Primary
     public DataSource userDataSource() {
         System.out.println("initializing user datasource");
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(userDataSourceDriverClassName);
-        dataSource.setUrl(userDataSourceUrl);
-        dataSource.setUsername(userDataSourceUsername);
-        dataSource.setPassword(userDataSourcePassword);
-
-        return dataSource;
+        HikariConfig userHikariConfig = new HikariConfig();
+        userHikariConfig.setJdbcUrl(userDataSourceUrl);
+        userHikariConfig.setUsername(userDataSourceUsername);
+        userHikariConfig.setPassword(userDataSourcePassword);
+        userHikariConfig.setDriverClassName(userDataSourceDriverClassName);
+        return new HikariDataSource(userHikariConfig);
     }
 
     @Bean(name = "userJdbcTemplate")
