@@ -1,68 +1,55 @@
 package com.tanerilyazov.test.multipledatasourcesrecovery.bean;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.io.FileNotFoundException;
+import java.util.logging.Logger;
 
-@Slf4j
 @Component
 public class PopulateDatabaseIfEmpty {
 
-    private final EntityManager userEntityManager;
+    private final Logger log = Logger.getLogger(QueryProductsPeriodically.class.getName());
 
-    private final EntityManager productEntityManager;
+    private final JdbcTemplate userJdbcTemplate;
+
+    private final JdbcTemplate productJdbcTemplate;
+
+    private final static String DROP_TABLE_USER = "DROP TABLE IF EXISTS User;";
+    private final static String CREATE_TABLE_USER = "CREATE TABLE User (\n" +
+            "id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,\n" +
+            "name VARCHAR(255),\n" +
+            "email VARCHAR(255),\n" +
+            "age bigint);";
+    private final static String INSERT_DATA_USER = "INSERT INTO User(name, email, age)\n" +
+            "VALUES ('pesho1', \"pesho1@gmail.com\", 18), ('pesho2', \"pesho2@gmail.com\", 18), ('pesho3', \"pesho3@gmail.com\", 18), ('pesho4', \"pesho4@gmail.com\", 18), ('pesho5', \"pesho5@gmail.com\", 18);";
+
+    private final static String DROP_TABLE_PRODUCT = "DROP TABLE IF EXISTS Product;";
+    private final static String CREATE_TABLE_PRODUCT = "CREATE TABLE Product (\n" +
+            "id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,\n" +
+            "name VARCHAR(255),\n" +
+            "price int);";
+    private final static String INSERT_DATA_PRODUCT = "INSERT INTO Product(name, price)\n" +
+            "VALUES ('product1', 18), ('product2', 18), ('product3', 18), ('product4', 18), ('product5', 18);";
+
 
     @Autowired
-    public PopulateDatabaseIfEmpty(EntityManager userEntityManager, @Qualifier("productEntityManager") EntityManager productEntityManager) {
-        this.userEntityManager = userEntityManager;
-        this.productEntityManager = productEntityManager;
+    public PopulateDatabaseIfEmpty(@Qualifier("userJdbcTemplate") JdbcTemplate userJdbcTemplate, @Qualifier("productJdbcTemplate") JdbcTemplate productJdbcTemplate) throws FileNotFoundException {
+        this.userJdbcTemplate = userJdbcTemplate;
+        this.productJdbcTemplate = productJdbcTemplate;
         initializeDb();
+        log.info("Initialized databases");
     }
 
     public void initializeDb() {
-        long usersCount = (long) userEntityManager.createQuery("SELECT count(*) FROM User").getSingleResult();
-        long productCount = (long) productEntityManager.createQuery("SELECT count(*) FROM Product").getSingleResult();
+        userJdbcTemplate.execute(DROP_TABLE_USER);
+        userJdbcTemplate.execute(CREATE_TABLE_USER);
+        userJdbcTemplate.execute(INSERT_DATA_USER);
 
-
-        List<Integer> integerList = new Random().ints(100,1000).limit(100).boxed().collect(Collectors.toList());
-        if (usersCount == 0) {
-            log.info("Populating users database");
-            integerList.forEach(
-                    this::insertUser
-            );
-        }
-        if (productCount == 0) {
-            log.info("Populating products database");
-            integerList.forEach(
-                    this::insertProduct
-            );
-
-        }
-    }
-
-    private void insertUser(Integer randomValue) {
-        userEntityManager.getTransaction().begin();
-        userEntityManager.createNativeQuery("INSERT INTO User(name, email, age) values (:name, :email, :age)")
-                .setParameter("name", "pesho-" + randomValue)
-                .setParameter("email", "pesho-" + randomValue + "@gmail.com")
-                .setParameter("age", randomValue % 10)
-                .executeUpdate();
-        userEntityManager.getTransaction().commit();
-    }
-
-    private void insertProduct(Integer randomValue) {
-        productEntityManager.getTransaction().begin();
-        productEntityManager.createNativeQuery("INSERT INTO Product(name, price) values (:name, :price)")
-                .setParameter("name", "product-" + randomValue)
-                .setParameter("price", randomValue.doubleValue())
-                .executeUpdate();
-        productEntityManager.getTransaction().commit();
+        productJdbcTemplate.execute(DROP_TABLE_PRODUCT);
+        productJdbcTemplate.execute(CREATE_TABLE_PRODUCT);
+        productJdbcTemplate.execute(INSERT_DATA_PRODUCT);
     }
 }

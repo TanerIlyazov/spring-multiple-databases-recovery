@@ -3,23 +3,16 @@ package com.tanerilyazov.test.multipledatasourcesrecovery.domain.user;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.*;
 
+@ToString
 @NoArgsConstructor
-@Getter @Setter
-@Entity
-@Table
+@Getter
+@Setter
 public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String name;
-
-    @Column(unique = true, nullable = false)
     private String email;
-
     private int age;
 }

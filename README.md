@@ -6,12 +6,18 @@ Seems like recovering the connection to an external datasource is not working as
 There are two branches in this project:
 - `master`: instructions and code to reproduce failing recovery
 - `single-datasource`: instructions and code with successfully recovering datasource connection
+- `without-spring-boot`: instruction and code with successfully recovering datasource connection with multiple datasources
 
 Both branches use the same datasource and jpa configuration.
 
 ---
 
-Running the application with the started mysql containers will populate the User and Product tables with pseudo-random values and start querying every 30s.
+### Running without spring boot. Everything should work the same besides the logging which is more primitive:
+- Run with `mvn tomcat7:run`
+
+---
+
+Running the application with the started mysql containers will populate the User and Product tables with mock values and start querying every 30s.
 If you stop one of the containers, f.e. with `docker stop user-mysql-db`, the connection will be lost and you'd start getting *Connection Refused*, starting the container again with `docker start user-mysql-db` will not be able to trigger the recovery mechanism of JDBC4 and the connection will be lost until a restart.
 
 Start mysql database with docker
