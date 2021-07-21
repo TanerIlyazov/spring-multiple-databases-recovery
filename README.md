@@ -3,12 +3,15 @@ Seems like recovering the connection to an external datasource is not working as
 - not using AutoDatasourceConfiguration
 - or having more than 1 datasource
 
-There are two branches in this project:
+There are four branches in this project:
 - `master`: instructions and code to reproduce failing recovery
 - `single-datasource`: instructions and code with successfully recovering datasource connection
-- `without-spring-boot`: instruction and code with successfully recovering datasource connection with multiple datasources
+- `without-spring-boot-hikaricp`: instruction and code with successfully recovering datasource connection with multiple datasources using HikariCP
+- `without-spring-boot-hibernate`: instruction and code with failing recovery of datasource connections with multiple datasources using Hibernate
 
-Both branches use the same datasource and jpa configuration.
+Branches use the same datasources and jpa configurations.
+
+### This branch replicates the failing recovery!
 
 ---
 

@@ -7,8 +7,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
@@ -26,7 +31,6 @@ public class UserDataSourceConfiguration {
     @Value("${spring.user.datasource.driver-class-name}")
     private String userDataSourceDriverClassName;
 
-
     @Bean
     @Primary
     public DataSource userDataSource() {
@@ -39,9 +43,31 @@ public class UserDataSourceConfiguration {
         return new HikariDataSource(userHikariConfig);
     }
 
-    @Bean(name = "userJdbcTemplate")
-    public JdbcTemplate userJdbcTemplate(@Qualifier("userDataSource") DataSource ds) {
-        return new JdbcTemplate(ds);
+    @Primary
+    @Bean(name = "userEntityManager")
+    public EntityManager entityManager(@Qualifier("userEntityManagerFactory") EntityManagerFactory userEntityManagerFactory) {
+        return userEntityManagerFactory.createEntityManager();
+    }
+
+    @Primary
+    @Bean(name = "userEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("userDataSource") DataSource userDataSource) {
+
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        vendorAdapter.setGenerateDdl(true);
+
+        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+        factory.setJpaVendorAdapter(vendorAdapter);
+        factory.setPackagesToScan("com.tanerilyazov.test.multipledatasourcesrecovery.domain.user");
+        factory.setDataSource(userDataSource);
+        factory.setPersistenceUnitName("user");
+        return factory;
+    }
+
+    @Primary
+    @Bean(name = "userTransactionManager")
+    public PlatformTransactionManager transactionManager(@Qualifier("userEntityManagerFactory") EntityManagerFactory userEntityManagerFactory) {
+        return new JpaTransactionManager(userEntityManagerFactory);
     }
 
 }
