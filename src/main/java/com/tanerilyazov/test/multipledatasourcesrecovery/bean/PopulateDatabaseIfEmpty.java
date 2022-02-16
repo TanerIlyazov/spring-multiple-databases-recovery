@@ -1,26 +1,24 @@
 package com.tanerilyazov.test.multipledatasourcesrecovery.bean;
 
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 @Slf4j
 @Component
 public class PopulateDatabaseIfEmpty {
 
-    private final EntityManager userEntityManager;
+  private final EntityManager userEntityManager;
 
-    private final EntityManager productEntityManager;
+  private final EntityManager productEntityManager;
 
     @Autowired
-    public PopulateDatabaseIfEmpty(EntityManager userEntityManager, @Qualifier("productEntityManager") EntityManager productEntityManager) {
+    public PopulateDatabaseIfEmpty(@Qualifier("userEntityManager") EntityManager userEntityManager, @Qualifier("productEntityManager") EntityManager productEntityManager) {
         this.userEntityManager = userEntityManager;
         this.productEntityManager = productEntityManager;
         initializeDb();
